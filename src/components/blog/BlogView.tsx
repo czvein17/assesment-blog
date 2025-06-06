@@ -36,6 +36,7 @@ export const BlogView = () => {
     if (updateBlog.fulfilled.match(result)) {
       setIsEditing(false);
       navigate(`/${id}`);
+      dispatch(fetchBlogById(id!));
     }
   };
 
