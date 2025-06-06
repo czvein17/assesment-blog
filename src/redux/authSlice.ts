@@ -1,40 +1,22 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { supabase } from "../supabase/client";
-import type { Credentials, User } from "../types/User";
+import type { User } from "../types/User";
+import { login, register } from "./thunks/authThunks";
 
 const userFromLocalStorage = localStorage.getItem("user");
-
-export const login = createAsyncThunk(
-  "auth/login",
-  async ({ email, password }: Credentials) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    if (error) throw error;
-
-    return data;
+const saveUserToStorage = (user: User | null, accessToken?: string) => {
+  if (user) {
+    localStorage.setItem("user", JSON.stringify(user));
+    if (accessToken) {
+      localStorage.setItem("accessToken", JSON.stringify(accessToken));
+    }
   }
-);
+};
 
-export const register = createAsyncThunk(
-  "auth/register",
-  async ({ name, email, password }: Credentials) => {
-    console.log("Registering user:", email);
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name: name,
-        },
-      },
-    });
-    if (error) throw error;
-
-    return data;
-  }
-);
+const removeUserFromStorage = () => {
+  localStorage.removeItem("user");
+  localStorage.removeItem("accessToken");
+};
 
 export const authSlice = createSlice({
   name: "auth",
@@ -50,8 +32,7 @@ export const authSlice = createSlice({
   reducers: {
     logout(state) {
       supabase.auth.signOut();
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("user");
+      removeUserFromStorage();
       state.user = null;
     },
   },
@@ -68,13 +49,7 @@ export const authSlice = createSlice({
           email: action.payload?.user.email || "",
         };
         state.loading = false;
-
-        localStorage.setItem(
-          "accessToken",
-          JSON.stringify(action.payload.session.access_token)
-        );
-
-        localStorage.setItem("user", JSON.stringify(state.user));
+        saveUserToStorage(state.user, action.payload.session.access_token);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -89,12 +64,7 @@ export const authSlice = createSlice({
           created_at: action.payload?.user?.created_at || "",
         };
         state.loading = false;
-
-        localStorage.setItem("user", JSON.stringify(state.user));
-        localStorage.setItem(
-          "accessToken",
-          JSON.stringify(action.payload?.session?.access_token || "")
-        );
+        saveUserToStorage(state.user, action.payload?.session?.access_token);
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;

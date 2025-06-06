@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/authSlice";
+import { login } from "../redux/thunks/authThunks";
 import type { AppDispatch, RootState } from "../redux/store";
 
 import { EmailIcon } from "../components/icons/EmailIcon";

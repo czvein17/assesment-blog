@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/store";
-import { register } from "../redux/authSlice";
+import { register } from "../redux/thunks/authThunks";
 
 import { UserIcon } from "../components/icons/UserIcon";
 import { PasswordIcon } from "../components/icons/PasswordIcon";
