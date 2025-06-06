@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 
 import { BlogCard } from "./BlogCard";
-import { fetchBlogs } from "../../redux/blogSlice";
+// import { fetchBlogs } from "../../redux/blogSlice";
 import { usePagination } from "../../hooks/usePagination";
 import { Pagination } from "../Pagination";
 import { Loading } from "../Loading";
 import { useBlogs } from "../../hooks/useBlogs";
+import { fetchBlogs } from "../../redux/thunks/blogThunks";
 
 export const AllBlogs = () => {
   const { dispatch, blogs, count, loading } = useBlogs();
@@ -17,7 +18,7 @@ export const AllBlogs = () => {
   }, [dispatch, page]);
 
   return (
-    <div className="flex flex-col flex-1 xl:w-4/6 p-5">
+    <section className="flex flex-col flex-1 xl:w-4/6 p-5">
       {loading ? (
         <Loading />
       ) : (
@@ -29,6 +30,6 @@ export const AllBlogs = () => {
       )}
 
       <Pagination totalPages={totalPages} page={page} onClick={setPage} />
-    </div>
+    </section>
   );
 };
