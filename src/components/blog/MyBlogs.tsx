@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { addBlog, fetchUserBlogs } from "../../redux/blogSlice";
+import { addBlog, fetchUserBlogs } from "../../redux/thunks/blogThunks";
 import { BlogCard } from "./BlogCard";
 import { Pagination } from "../Pagination";
 import { usePagination } from "../../hooks/usePagination";
@@ -34,7 +34,7 @@ export const MyBlogs = () => {
   }, [dispatch, user, page]);
 
   return (
-    <div className="w-4/6 flex-1 flex flex-col space-y-5 p-5">
+    <section className="w-4/6 flex-1 flex flex-col space-y-5 p-5">
       {postBlog ? (
         <BlogForm
           isCreateNew={true}
@@ -77,6 +77,6 @@ export const MyBlogs = () => {
           )}
         </>
       )}
-    </div>
+    </section>
   );
 };
