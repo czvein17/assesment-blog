@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { deleteBlog, fetchBlogById, updateBlog } from "../../redux/blogSlice";
+import {
+  deleteBlog,
+  fetchBlogById,
+  updateBlog,
+} from "../../redux/thunks/blogThunks";
 import type { NewBlog } from "../../types/BlogType";
 import { useBlogs } from "../../hooks/useBlogs";
 
@@ -63,7 +67,7 @@ export const BlogView = () => {
   }
 
   return (
-    <div className="w-4/6 flex-1 place-items-center flex flex-col space-y-5 p-5 ">
+    <section className="w-4/6 flex-1 place-items-center flex flex-col space-y-5 p-5 ">
       {isEditing ? (
         <BlogForm
           isCreateNew={false}
@@ -122,6 +126,6 @@ export const BlogView = () => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
