@@ -55,7 +55,7 @@ export const MyBlogs = () => {
         <>
           <h1 className="text-center text-3xl font-bold uppercase">My Blogs</h1>
           <button
-            className="btn btn-primary ml-auto"
+            className="btn btn-primary ml-auto text-white"
             onClick={() => setPostBlog(!postBlog)}
           >
             Create a Blog
@@ -76,14 +76,10 @@ export const MyBlogs = () => {
                   <BlogCard key={blog.id} blog={blog} />
                 ))}
               </div>
-
-              <Pagination
-                totalPages={totalPages}
-                page={page}
-                onClick={setPage}
-              />
             </>
           )}
+
+          <Pagination totalPages={totalPages} page={page} onClick={setPage} />
         </>
       )}
     </section>

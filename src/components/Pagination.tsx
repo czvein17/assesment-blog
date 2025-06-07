@@ -14,8 +14,8 @@ export const Pagination: React.FC<PaginationProps> = ({
       {[...Array(totalPages)].map((_, idx) => (
         <button
           key={idx}
-          className={`join-item btn btn-square ${
-            page === idx + 1 ? "btn-primary" : ""
+          className={`join-item btn btn-square  ${
+            page === idx + 1 ? "btn-primary text-white" : ""
           }`}
           onClick={() => onClick(idx + 1)}
         >

@@ -32,7 +32,7 @@ export const Header = () => {
                 onClick={() => {
                   dispatch(logout());
                 }}
-                className="btn btn-primary"
+                className="btn btn-primary text-white"
               >
                 Logout
               </button>

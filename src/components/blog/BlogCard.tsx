@@ -10,7 +10,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
   const navigate = useNavigate();
 
   return (
-    <div key={blog.id} className="card w-96 bg-base-100 card-lg shadow-md">
+    <div key={blog.id} className="card w-96 bg-base-300 card-lg shadow-md">
       <div className="card-body">
         <h2 className="card-title">{blog.title}</h2>
         <p>
@@ -20,7 +20,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
         </p>
         <div className="justify-end card-actions">
           <button
-            className="btn btn-primary "
+            className="btn btn-primary text-white "
             onClick={() => navigate(`/${blog.id}`)}
           >
             Read More
