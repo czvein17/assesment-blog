@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-export function usePagination(totalCount: number, pageSize: number) {
+export function usePagination(totalCount: number) {
   const [page, setPage] = useState(1);
+  const pageSize = 3;
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const goToPage = (p: number) => {
@@ -9,5 +10,5 @@ export function usePagination(totalCount: number, pageSize: number) {
     setPage(p);
   };
 
-  return { page, setPage: goToPage, totalPages };
+  return { page, setPage: goToPage, totalPages, pageSize };
 }
