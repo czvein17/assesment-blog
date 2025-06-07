@@ -18,7 +18,6 @@ interface BlogSliceState {
 }
 
 // Helpers
-
 const setLoading = (state: BlogSliceState, loading: boolean) => {
   state.loading = loading;
 };
