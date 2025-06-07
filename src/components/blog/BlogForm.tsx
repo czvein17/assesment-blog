@@ -28,13 +28,34 @@ export const BlogForm: React.FC<BlogForm> = ({
     user_id: "",
   });
 
+  const [attempted, setAttempted] = useState(false);
+  const [errors, setErrors] = useState({
+    title: "",
+    content: "",
+  });
+
   useEffect(() => {
     if (initialBlog) setBlog(initialBlog);
   }, [initialBlog]);
 
+  // Validate form fields
+  const validateForm = () => {
+    const newErrors = {
+      title: blog.title.trim() === "" ? "Title is required" : "",
+      content: blog.content.trim() === "" ? "Content is required" : "",
+    };
+
+    setErrors(newErrors);
+    return !newErrors.title && !newErrors.content;
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await onSubmit(blog);
+    setAttempted(true);
+
+    if (validateForm()) {
+      await onSubmit(blog);
+    }
   };
 
   return (
@@ -55,6 +76,9 @@ export const BlogForm: React.FC<BlogForm> = ({
             value={blog.title}
             onChange={(e) => setBlog({ ...blog, title: e.target.value })}
           />
+          {attempted && errors.title && (
+            <p className="text-error text-sm mt-1">{errors.title}</p>
+          )}
         </fieldset>
 
         <fieldset className="fieldset">
@@ -65,6 +89,9 @@ export const BlogForm: React.FC<BlogForm> = ({
             value={blog.content}
             onChange={(e) => setBlog({ ...blog, content: e.target.value })}
           ></textarea>
+          {attempted && errors.content && (
+            <p className="text-error text-sm mt-1">{errors.content}</p>
+          )}
         </fieldset>
 
         <div className="justify-end card-actions">
