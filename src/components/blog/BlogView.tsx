@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import {
-  deleteBlog,
-  fetchBlogById,
-  updateBlog,
-} from "../../redux/thunks/blogThunks";
 import type { NewBlog } from "../../types/BlogType";
 import { useBlogs } from "../../hooks/useBlogs";
 
@@ -17,45 +12,37 @@ export const BlogView = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const { id } = useParams<{ id: string }>();
-  const { selectedBlog: blog, loading, dispatch, user } = useBlogs();
+  const {
+    selectedBlog: blog,
+    loading,
+    user,
+    handleFetchBlogById,
+    handleUpdateBlog,
+    handleDeleteBlog,
+  } = useBlogs();
 
   useEffect(() => {
-    if (id) dispatch(fetchBlogById(id));
-  }, [dispatch, id]);
+    if (id) handleFetchBlogById(id);
+  }, [id, handleFetchBlogById]);
 
-  if (loading) return <Loading />;
-
-  console.log(user);
-
-  const handleUpdateBlog = async (updatedFields: NewBlog) => {
+  const updateBlog = async (updatedFields: NewBlog) => {
     if (!blog) return;
 
-    const result = await dispatch(
-      updateBlog({
-        ...blog,
-        ...updatedFields,
-      })
-    );
-
-    if (updateBlog.fulfilled.match(result)) {
-      setIsEditing(false);
-      navigate(`/${id}`);
-      dispatch(fetchBlogById(id!));
-    }
+    const success = await handleUpdateBlog(updatedFields);
+    if (success) setIsEditing(false);
   };
 
-  const handleDelete = async () => {
+  const deleteBlog = async () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this blog?"
     );
     if (!confirmed) return;
 
-    const result = await dispatch(deleteBlog(id!));
-    if (deleteBlog.fulfilled.match(result)) {
-      navigate("/");
-    }
+    const success = await handleDeleteBlog(id!);
+    if (success) navigate("/");
   };
 
+  if (loading) return <Loading />;
   if (!blog) {
     return (
       <div className="w-4/6 flex-1 place-items-center flex flex-col space-y-5 p-5">
@@ -80,7 +67,7 @@ export const BlogView = () => {
                 }
               : undefined
           }
-          onSubmit={handleUpdateBlog}
+          onSubmit={updateBlog}
           onCancel={() => setIsEditing(!isEditing)}
         />
       ) : (
@@ -115,7 +102,7 @@ export const BlogView = () => {
                   </button>
                   <button
                     className="btn btn-primary shadow-xl"
-                    onClick={handleDelete}
+                    onClick={deleteBlog}
                   >
                     Delete
                   </button>

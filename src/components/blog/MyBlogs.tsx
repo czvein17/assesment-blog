@@ -1,37 +1,46 @@
 import { useEffect, useState } from "react";
-import { addBlog, fetchUserBlogs } from "../../redux/thunks/blogThunks";
-import { BlogCard } from "./BlogCard";
-import { Pagination } from "../Pagination";
 import { usePagination } from "../../hooks/usePagination";
-import { Loading } from "../Loading";
-import { BlogForm } from "./BlogForm";
 import { useBlogs } from "../../hooks/useBlogs";
 import type { NewBlog } from "../../types/BlogType";
 
+import { Loading } from "../Loading";
+import { BlogCard } from "./BlogCard";
+import { BlogForm } from "./BlogForm";
+import { Pagination } from "../Pagination";
+
 export const MyBlogs = () => {
   const [postBlog, setPostBlog] = useState(false);
-  const { dispatch, user, blogs: UserBlogs, count, loading } = useBlogs();
+  const {
+    user,
+    blogs: UserBlogs,
+    count,
+    loading,
+    handleFetchUserBlogs,
+    handleCreateBlog,
+  } = useBlogs();
+  const { page, setPage, totalPages, pageSize } = usePagination(count);
 
-  const pageSize = 3;
-  const { page, setPage, totalPages } = usePagination(count, pageSize);
-
-  const handleCreateBlog = async (newBlog: NewBlog) => {
-    const result = await dispatch(
-      addBlog({
-        ...newBlog,
-        user_id: user?.id || "",
-      })
-    );
-
-    if (addBlog.fulfilled.match(result)) {
-      setPostBlog(false);
-      dispatch(fetchUserBlogs({ userId: user!.id, page, pageSize }));
-    }
+  const onCreateBlog = async (newBlog: NewBlog) => {
+    const success = await handleCreateBlog(newBlog, page, pageSize);
+    if (success) setPostBlog(false);
   };
 
   useEffect(() => {
-    if (user) dispatch(fetchUserBlogs({ userId: user.id, page, pageSize }));
-  }, [dispatch, user, page]);
+    if (user) handleFetchUserBlogs(user.id, page, pageSize);
+  }, [handleFetchUserBlogs, user, page, pageSize]);
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        <h1 className="text-2xl font-bold mb-4">
+          Please log in to view your blogs
+        </h1>
+        <p className="text-gray-500">
+          You need to be logged in to create or view your blogs.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="w-4/6 flex-1 flex flex-col space-y-5 p-5">
@@ -40,7 +49,7 @@ export const MyBlogs = () => {
           isCreateNew={true}
           onCancel={() => setPostBlog(!postBlog)}
           loading={loading}
-          onSubmit={handleCreateBlog}
+          onSubmit={onCreateBlog}
         />
       ) : (
         <>
